@@ -6,19 +6,26 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
 using QuizPrototype.Data.Models.Data;
+using System.Threading;
 
 namespace QuizPrototype.Services
 {
     public class TestService : ITestService
     {
+
+        
         TestRepository testRepository = new TestRepository();
+        CheckTestService checkService = new CheckTestService();
         public void AddTest()
         {
             
             Test test = new Test();
+           
             test.questions = new List<Question>();
             test.answers = new List<Answer>();
            // test.tests = new List<Tests>();
+
+
             Console.WriteLine("*** Creating Test ***");
             test.id = 4;
             Console.WriteLine("Enter a title");
@@ -96,7 +103,7 @@ namespace QuizPrototype.Services
 
         public void TakeTest()
         {
-            
+
             List<Test> alltests = testRepository.GetAllTests();
             int count = 0;
 
@@ -111,17 +118,47 @@ namespace QuizPrototype.Services
 
             Console.WriteLine("Choose the number of test u want to take...");
 
-            // Сделать тут проверку на ввод!
+            // Check input here!
             int userEnter = int.Parse(Console.ReadLine());
             // !!!
 
+            // decrement user enter, because of list starts with 0 index.
+            userEnter--;
+
+            // sampling test based on user input using lambda and linq
             var selectedTest = alltests.Where(x => x.id == userEnter).FirstOrDefault();
-            Console.WriteLine($"You selected test about {selectedTest.title}, sub-theme of this test is: {selectedTest.subTheme} ");
-            do
+            Console.WriteLine($"You selected test about {selectedTest.title}, sub-theme of this test is: {selectedTest.subTheme}\n ");
+
+
+            List<Question> questions = selectedTest.questions.ToList();
+            List<Answer> answers = selectedTest.answers.ToList();
+            bool result;
+            //int counter = selectedTest.
+
+            for (int i = 0; i < questions.Count; i++)
             {
+                for (int a = selectedTest.timer; a >= 0; a--)
+                {
+                    var question = questions.ElementAt(i);
+                    var answer = answers.ElementAt(i);
+                    Console.WriteLine($"Question is :{question.question}\n");
+                    Console.WriteLine("Please, write the answer...");
+                    var userAnswer = Console.ReadLine();
+                    result = checkService.CheckTest(userAnswer, answer.answer);
+                    if (result == true)
+                    {
+                        Console.WriteLine($"You're right, answer is:{answer.answer}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Wrong answer, the right answer is: {answer.answer}");
+                    }
+                }
+                
+            }
 
-
-            } while (true);
+            
+            
         }
 
         public void UpdateTest(int id, Test newTest)

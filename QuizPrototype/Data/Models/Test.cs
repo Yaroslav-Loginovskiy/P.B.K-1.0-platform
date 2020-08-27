@@ -16,5 +16,6 @@ namespace QuizPrototype.Data.Models
         public string subSubTheme { get; set; }
         public List<Question> questions { get; set; }
         public List<Answer> answers { get; set; }
+        public int timer { get; set; }
     }
 }
