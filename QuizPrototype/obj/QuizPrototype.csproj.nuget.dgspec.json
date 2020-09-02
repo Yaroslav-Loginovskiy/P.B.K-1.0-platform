@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\login\\source\\repos\\QuizPrototype\\QuizPrototype\\QuizPrototype.csproj": {}
+    "C:\\Users\\login\\P.B.K-1.0-platform\\QuizPrototype\\QuizPrototype.csproj": {}
   },
   "projects": {
-    "C:\\Users\\login\\source\\repos\\QuizPrototype\\QuizPrototype\\QuizPrototype.csproj": {
+    "C:\\Users\\login\\P.B.K-1.0-platform\\QuizPrototype\\QuizPrototype.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\login\\source\\repos\\QuizPrototype\\QuizPrototype\\QuizPrototype.csproj",
+        "projectUniqueName": "C:\\Users\\login\\P.B.K-1.0-platform\\QuizPrototype\\QuizPrototype.csproj",
         "projectName": "QuizPrototype",
-        "projectPath": "C:\\Users\\login\\source\\repos\\QuizPrototype\\QuizPrototype\\QuizPrototype.csproj",
+        "projectPath": "C:\\Users\\login\\P.B.K-1.0-platform\\QuizPrototype\\QuizPrototype.csproj",
         "packagesPath": "C:\\Users\\login\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\login\\source\\repos\\QuizPrototype\\QuizPrototype\\obj\\",
+        "outputPath": "C:\\Users\\login\\P.B.K-1.0-platform\\QuizPrototype\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"

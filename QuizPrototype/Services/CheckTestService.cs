@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QuizPrototype.Services
+﻿namespace QuizPrototype.Services
 {
-   public class CheckTestService
+    public class CheckTestService
     {
-        bool result;
-        
-        public bool CheckTest(string question, string answer)
+        public bool CheckTest(string userAnswer, string answer)
         {
-            if (question.ToLower() == answer.ToLower())
+            bool result;
+            if (userAnswer.ToLower() == answer.ToLower())
             {
                 result = true;
             }

@@ -2,54 +2,44 @@
 using QuizPrototype.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks.Dataflow;
-using QuizPrototype.Data.Models.Data;
+using System.Security.Permissions;
 using System.Threading;
 
 namespace QuizPrototype.Services
 {
-    public class TestService : ITestService
+   public class TestService : ITestService
     {
-
-        
-        TestRepository testRepository = new TestRepository();
-        CheckTestService checkService = new CheckTestService();
+        readonly TestRepository testRepository = new TestRepository();
+        readonly CheckTestService checkService = new CheckTestService();
+       
         public void AddTest()
         {
-            
             Test test = new Test();
-           
-            test.questions = new List<Question>();
-            test.answers = new List<Answer>();
-           // test.tests = new List<Tests>();
-
-
+            test.Questions = new List<Question>();
+            test.Answers = new List<Answer>();
             Console.WriteLine("*** Creating Test ***");
-            test.id = 4;
+            test.Id = 4;
             Console.WriteLine("Enter a title");
-            test.title = Console.ReadLine();
+            test.Title = Console.ReadLine();
             Console.WriteLine("Enter a Subtheme");
-            test.subTheme = Console.ReadLine();
+            test.SubTheme = Console.ReadLine();
             Console.WriteLine("Enter a description");
-            test.description = Console.ReadLine();
+            test.Description = Console.ReadLine();
             Console.WriteLine("Enter a sub sub theme");
-            test.subSubTheme = Console.ReadLine();
+            test.SubSubTheme = Console.ReadLine();
             bool userAnsw = true;
             do
             {
                 Console.WriteLine("Please add a question in your test...");
-
-                test.questions.Add(new Question { question = Console.ReadLine() });
+                test.Questions.Add(new Question { question = Console.ReadLine() });
 
                 Console.WriteLine("Please, add a answer to the question below...");
-
-                test.answers.Add(new Answer { answer = Console.ReadLine() });
+                test.Answers.Add(new Answer { answer = Console.ReadLine() });
                 Console.WriteLine("Do you want to create one more question? y/n");
-                
                 do
-                {
+                   {
                     var userEnter = Console.ReadLine();
                     if (userEnter.ToLower() == "y")
                     {
@@ -70,50 +60,26 @@ namespace QuizPrototype.Services
                         }
 
                     }
-
-                    
-                } while (userAnsw == true);
-
-
-            } while (userAnsw == true);
-
-
+              } while (userAnsw == true);
+           } while (userAnsw == true);
             testRepository.AddTest(test);
             //Console.WriteLine($"Title of your Test : {test.title}\n Description of your test: {test.description}\n Sub-theme of your test: {test.subTheme}\n sub-sub theme of your test: {test.subSubTheme}" +
             //    $"  ");
-            foreach (var answer in test.answers)
+            foreach (var answer in test.Answers)
             {
-               
-                Console.WriteLine(answer.answer);
+               Console.WriteLine(answer.answer);
             }
-
-
-            
         }
 
-        //public void DeleteTest(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public List<Test> GetAllTests()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
+       
         public void TakeTest()
         {
-
-            List<Test> alltests = testRepository.GetAllTests();
+            List<Test> allTests = testRepository.GetAllTests();
             int count = 0;
-
-            //var selected = from t in alltests select t;
-
-            foreach (var test in alltests)
+            foreach (var test in allTests)
             {
-
                 count++;
-                Console.WriteLine($"{count}) Test title : {test.title}\n Test description: {test.description} \n Test sub-theme: {test.subTheme} \n");
+                Console.WriteLine($"{count}) Test title : {test.Title}\n Test description: {test.Description} \n Test sub-theme: {test.SubTheme} \n");
             }
 
             Console.WriteLine("Choose the number of test u want to take...");
@@ -124,20 +90,76 @@ namespace QuizPrototype.Services
 
             // decrement user enter, because of list starts with 0 index.
             userEnter--;
-
-            // sampling test based on user input using lambda and linq
-            var selectedTest = alltests.Where(x => x.id == userEnter).FirstOrDefault();
-            Console.WriteLine($"You selected test about {selectedTest.title}, sub-theme of this test is: {selectedTest.subTheme}\n ");
-
-
-            List<Question> questions = selectedTest.questions.ToList();
-            List<Answer> answers = selectedTest.answers.ToList();
-            bool result;
-            //int counter = selectedTest.
-
-            for (int i = 0; i < questions.Count; i++)
+            var selectedTest = allTests.Where(x => x.Id == userEnter).FirstOrDefault();
+            //TakeTestWithTimer(selectedTest);
+            Thread thread = new Thread(new ParameterizedThreadStart(TakeTestWithTimer));
+            thread.Start(selectedTest);
+            Thread thread2 = new Thread(new ParameterizedThreadStart(TimerService.StartTimer));
+            thread2.Start(selectedTest.Timer);
+            do
             {
-                for (int a = selectedTest.timer; a >= 0; a--)
+                if (!thread.IsAlive)
+                {
+                    selectedTest.Timer = 0;
+                    thread2.Start(selectedTest);
+                }
+                else
+                {
+                    if (!thread2.IsAlive)
+                    {
+                        selectedTest.accept = false;
+                        
+                        thread.Start(selectedTest);
+
+                    }
+                }
+
+            } while (thread.IsAlive || thread2.IsAlive);
+            Console.WriteLine("You did it.");
+
+            //TakeTestWithTimer(selectedTest);
+            //  TimerService.StartTimer(selectedTest.Timer);
+            //bool isCompleted = TakeTestWithTimer(selectedTest);
+            //do
+            //{
+            //    if (isCompleted ==true)
+            //    {
+            //        TimerService.StartTimer(0);
+            //    }
+            //} while (true);
+
+
+
+            //bool  running_ = false;
+            // thread.Interrupt();
+            //  if (!thread.Join(2000))
+            //  { // or an agreed resonable time
+            //     thread.Abort();
+            //  }
+
+
+
+           
+           
+
+        }
+
+        public void UpdateTest(int id, Test newTest)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TakeTestWithTimer(Object obj)
+        {
+            var selectedTest = (Test)obj;
+            
+            if (selectedTest.accept)
+            {
+                Console.WriteLine($"You selected test about {selectedTest.Title}, sub-theme of this test is: {selectedTest.SubTheme}\n ");
+                List<Question> questions = selectedTest.Questions.ToList();
+                List<Answer> answers = selectedTest.Answers.ToList();
+                bool result;
+                for (int i = 0; i < questions.Count; i++)
                 {
                     var question = questions.ElementAt(i);
                     var answer = answers.ElementAt(i);
@@ -154,16 +176,11 @@ namespace QuizPrototype.Services
                         Console.WriteLine($"Wrong answer, the right answer is: {answer.answer}");
                     }
                 }
-                
             }
-
             
+  
             
-        }
 
-        public void UpdateTest(int id, Test newTest)
-        {
-            throw new NotImplementedException();
         }
     }
 }

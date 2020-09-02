@@ -1,30 +1,26 @@
-﻿using QuizPrototype.Data.Models.Data;
-using System;
-using QuizPrototype.Data;
-
+﻿using QuizPrototype.Data.Models;
+using QuizPrototype.Data.Models.Data;
 using System.Collections.Generic;
-using System.Text;
-using QuizPrototype.Data.Models;
 
 namespace QuizPrototype.Repositories
 {
     public class TestRepository
     {
-        Tests tests = new Tests();
+
         public List<Test> GetAllTests()
         {
-            
-            List<Test> alltests = tests.allTests;
+
+            List<Test> alltests = Tests.allTests;
             return alltests;
         }
 
         public void AddTest(Test newTest)
         {
-            
-            tests.allTests.Add(newTest);
+
+            Tests.allTests.Add(newTest);
         }
-        
-        
+
+
 
     }
 }

@@ -1,21 +1,17 @@
-﻿using QuizPrototype.Data.Models.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace QuizPrototype.Data.Models
 {
-   public class Test
+    public class Test
     {
-        public int id { get; set; }
-        public string title { get; set; }
-
-        public List<Tests> tests { get; set; }
-        public string description { get; set; }
-        public string subTheme { get; set; }
-        public string subSubTheme { get; set; }
-        public List<Question> questions { get; set; }
-        public List<Answer> answers { get; set; }
-        public int timer { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string SubTheme { get; set; }
+        public string SubSubTheme { get; set; }
+        public List<Question> Questions { get; set; }
+        public List<Answer> Answers { get; set; }
+        public int? Timer { get; set; }
+        public bool accept { get; set; } = true;
     }
 }

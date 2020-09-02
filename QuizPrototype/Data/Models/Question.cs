@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QuizPrototype.Data.Models
+﻿namespace QuizPrototype.Data.Models
 {
-   public class Question
+    public class Question
     {
         public string question { get; set; }
         //public string thirdQuestion { get; set; }

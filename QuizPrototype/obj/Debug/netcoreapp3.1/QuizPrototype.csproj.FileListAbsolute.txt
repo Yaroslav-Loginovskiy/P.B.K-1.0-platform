@@ -11,3 +11,16 @@ C:\Users\login\source\repos\QuizPrototype\QuizPrototype\obj\Debug\netcoreapp3.1\
 C:\Users\login\source\repos\QuizPrototype\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.dll
 C:\Users\login\source\repos\QuizPrototype\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.pdb
 C:\Users\login\source\repos\QuizPrototype\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.genruntimeconfig.cache
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\bin\Debug\netcoreapp3.1\QuizPrototype.exe
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\bin\Debug\netcoreapp3.1\QuizPrototype.deps.json
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\bin\Debug\netcoreapp3.1\QuizPrototype.runtimeconfig.json
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\bin\Debug\netcoreapp3.1\QuizPrototype.runtimeconfig.dev.json
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\bin\Debug\netcoreapp3.1\QuizPrototype.dll
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\bin\Debug\netcoreapp3.1\QuizPrototype.pdb
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.csprojAssemblyReference.cache
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.csproj.CoreCompileInputs.cache
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.AssemblyInfoInputs.cache
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.AssemblyInfo.cs
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.dll
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.pdb
+C:\Users\login\P.B.K-1.0-platform\QuizPrototype\obj\Debug\netcoreapp3.1\QuizPrototype.genruntimeconfig.cache

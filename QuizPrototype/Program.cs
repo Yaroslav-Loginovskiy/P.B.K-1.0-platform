@@ -31,7 +31,7 @@ namespace QuizPrototype
 
             do
             {
-                /* // Возвращает true, если хотя бы один из операндов возвращает true. */
+                /* || Возвращает true, если хотя бы один из операндов возвращает true. */
                 Userline = Console.ReadLine();
                 parsed = int.TryParse(Userline, out userChoise);
                 if (string.IsNullOrWhiteSpace(Userline))
@@ -54,12 +54,8 @@ namespace QuizPrototype
                 }
 
             } while (!parsed || (userChoise > 3 || userChoise < 1));
-
-            
-           
-
-
-                switch (userChoise)
+   
+            switch (userChoise)
                 {
                     case 1:
                          service.TakeTest();
