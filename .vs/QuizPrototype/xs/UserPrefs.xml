@@ -1,0 +1,43 @@
+﻿<Properties StartupConfiguration="{5A7AC242-424A-433A-9444-655E197445A7}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="QuizPrototype/Program.cs">
+    <Files>
+      <File FileName="QuizPrototype/Services/TimerService.cs" Line="18" Column="50" />
+      <File FileName="QuizPrototype/Services/TestService.cs" Line="67" Column="14" />
+      <File FileName="QuizPrototype/Services/ITestService.cs" />
+      <File FileName="QuizPrototype/Program.cs" Line="62" Column="18" />
+      <File FileName="QuizPrototype/Data/Models/Test.cs" />
+      <File FileName="QuizPrototype/Repositories/TestRepository.cs" />
+      <File FileName="QuizPrototype/Repositories/ITestRepository.cs" />
+      <File FileName="QuizPrototype/UI/UserPrompts.cs" />
+      <File FileName="QuizPrototype/Services/CheckTestService.cs" Line="26" Column="2" />
+      <File FileName="QuizPrototype/Data/Models/Answer.cs" />
+      <File FileName="QuizPrototype/Data/Models/Question.cs" />
+      <File FileName="QuizPrototype/Data/Models/UserTest.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="QuizPrototype" expanded="True">
+            <Node name="BusinessLogic" expanded="True" />
+            <Node name="QuizPrototype" expanded="True">
+              <Node name="Data" expanded="True">
+                <Node name="Models" expanded="True" />
+              </Node>
+              <Node name="Repositories" expanded="True" />
+              <Node name="Services" expanded="True" />
+              <Node name="UI" expanded="True" />
+              <Node name="Program.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.QuizPrototype PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
