@@ -1,10 +1,11 @@
-﻿namespace QuizPrototype.Data.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace QuizPrototype.Data.Models
 {
     public class Answer
     {
-        public int Id { get; set; }
-        public string Body { get; set; }
-        public int questionId { get; set; }
+        public string answer { get; set; }
     }
-
 }
