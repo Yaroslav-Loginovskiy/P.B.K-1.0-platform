@@ -2,6 +2,7 @@
 using QuizPrototype.Data;
 using QuizPrototype.Data.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,14 +20,21 @@ namespace QuizPrototype.Repositories
 
         public List<Test> GetAllTests()
         {
-            DataBaseContext dbContext = new DataBaseContext();
-            return dbContext.Tests.ToList();
+            using (var dbContext = new DataBaseContext())
+            {
+                
+                return dbContext.Tests.Include(c =>c.Questions).ThenInclude(g => g.Answer).Include(a =>a.Topic).ToList();
+            }
         }
 
         public void AddTest(Test newTest)
         {
-            context.Tests.Add(newTest);
-            context.SaveChanges();
+           using (var dbContext = new DataBaseContext())
+            {
+                dbContext.Database.EnsureCreated();
+                dbContext.Tests.Add(newTest);
+                dbContext.SaveChanges();
+            }
         }
         public Test GetTestById(int testId)
         {
@@ -49,7 +57,10 @@ namespace QuizPrototype.Repositories
             //.FirstOrDefault();
         }
             
-         
+         public List<Topic> GetAllTopics()
+        {
+            return context.Topic.ToList();
+        }
         
         public void UpdateTest(Test updatedTest)
         {
@@ -107,5 +118,23 @@ namespace QuizPrototype.Repositories
             
         }
 
+        public int GetRandomTestByTopic(string topic)
+        {
+            List<Test> allTests = context.Tests.ToList();
+            List<Topic> allTopics = context.Topic.ToList();
+           
+            Random random = new Random();
+           int id =  random.Next(allTests.Count);
+            Test test = allTests[id];
+
+
+
+
+
+
+
+
+            return test.Id; 
+        }
     }
 }

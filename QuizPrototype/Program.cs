@@ -1,4 +1,5 @@
-﻿using QuizPrototype.Data.Models;
+﻿using QuizPrototype.Data;
+using QuizPrototype.Data.Models;
 using QuizPrototype.Repositories;
 using QuizPrototype.Services;
 using QuizPrototype.UI;
@@ -13,8 +14,13 @@ namespace QuizPrototype
 
             ITestRepository testRepository = new TestRepository();
             UserPrompts userPrompts = new UserPrompts(testRepository);
-
-
+            //DataBaseContext dataBaseContext = new DataBaseContext();
+            //User user = new User();
+            //user.Name = "guest";
+            
+            
+            //dataBaseContext.User.Add(user);
+            //dataBaseContext.SaveChanges();
             //TestService testService = new TestService();
             Console.WriteLine("***Welcome to PBK 1.0 test platform!***\n");
             Console.WriteLine(@"In this application you can:
@@ -29,7 +35,8 @@ namespace QuizPrototype
                 Console.WriteLine("Please, enter the following number:\n" +
                 "1)Take test\n" +
                 "2)Create test\n" +
-                "3)Change test\n ");
+                "3)Change test\n" +
+                "4)Show statistics\n ");
 
                 int userChoise;
                 string Userline;
@@ -52,20 +59,21 @@ namespace QuizPrototype
                         }
                         else
                         {
-                            if ((userChoise > 3 || userChoise < 1))
+                            if ((userChoise > 4 || userChoise < 1))
                             {
                                 Console.WriteLine("Incorrect number, try a different");
                             }
                         }
                     }
 
-                } while (!parsed || (userChoise > 3 || userChoise < 1));
+                } while (!parsed || (userChoise > 4 || userChoise < 1));
 
                 switch (userChoise)
                 {
                     case 1:
 
-                        var test = userPrompts.PromptForTargetTestId();
+                        int testIdD = userPrompts.PromptForTargetRandomTestId();
+                        var test = testRepository.GetTestById(testIdD);
                         TestService service = new TestService(test);
                         service.TakeTest();
                         break;
@@ -80,6 +88,10 @@ namespace QuizPrototype
                         var updatedTest = Test.UpdateTest(testId);
                         testRepository.UpdateTest(updatedTest);
 
+                        break;
+                    case 4:
+                        Console.WriteLine("Showing statistics...");
+                        Console.ReadLine();
                         break;
 
                 }

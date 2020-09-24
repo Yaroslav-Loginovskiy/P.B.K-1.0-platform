@@ -1,6 +1,8 @@
 ﻿using QuizPrototype.Data;
 using QuizPrototype.Data.Models;
+using QuizPrototype.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
@@ -10,10 +12,11 @@ namespace QuizPrototype.Services
     {
 
         readonly CheckTestService checkService = new CheckTestService();
-        //TODO: IUserRepository _userRepository
+        IUserRepository _userRepository = new UserRepository();
         // _userRepository.Tests.AddNewTest();
         System.Timers.Timer timer;
         Test _test;
+        
         UserTest userTest;
         bool testFinished;
         TimeSpan currentTestTime = default;
@@ -22,10 +25,11 @@ namespace QuizPrototype.Services
         public TestService(Test test)
         {
             _test = test;
+          //  _user = user;
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
             userTest = new UserTest();
-
+            
         }
 
 
@@ -45,7 +49,10 @@ namespace QuizPrototype.Services
 
         public bool TakeTest(bool resultsAreVisible = false)
         {
-            Console.WriteLine($"You selected test about {_test.Title}, sub-theme of this test is: {_test.SubTheme}\n ");
+            User _user = _userRepository.GetUserById(1);
+            userTest.RightAnswers = new List<Answer>();
+            userTest.WrongAnswers = new List<Answer>();
+            Console.WriteLine($"You selected test about {_test.Title}, topic of this test is: {_test.Topic.Body}\n ");
             if (_test.Time.Hours != 0 || _test.Time.Minutes != 0 || _test.Time.Seconds != 0)
             {
                 Console.WriteLine("This test include timer");
@@ -89,13 +96,13 @@ namespace QuizPrototype.Services
             {
                 //CHECK
                 var question = _test.Questions.ElementAt(i);
-              //  var question = _test.Questions.Where(x => x.Id == i).FirstOrDefault();
-                    
+                //  var question = _test.Questions.Where(x => x.Id == i).FirstOrDefault();
 
 
-  
 
-               i++;
+
+
+                i++;
 
                 Console.WriteLine($"Question is :{question.Body}\n");
                 Console.WriteLine("Please, write the answer...");
@@ -115,15 +122,23 @@ namespace QuizPrototype.Services
                 if (isCorrectAnswer)
                 {
                     if (resultsAreVisible) Console.WriteLine($"You're right, answer is:{question.Answer.Body}");
+                    userTest.RightAnswers.Add(new Answer() {Body = question.Answer.Body, questionId=0 });
                     positive++;
+                    
                 }
                 else
                 {
                     if (resultsAreVisible) Console.WriteLine($"Wrong answer, the right answer is: {question.Answer.Body}");
+                    userTest.WrongAnswers.Add(new Answer() { Body = question.Answer.Body,questionId = 0 });
                     negative++;
                 }
             }
             timer.Stop();
+            
+            userTest.TestId = _test.Id;
+            userTest.UserName = _user.Name;
+            
+            _userRepository.AddNewTestToUser(userTest, _user);
             return checkService.CheckTest(positive, negative);
         }
 

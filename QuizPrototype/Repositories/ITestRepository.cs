@@ -9,5 +9,8 @@ namespace QuizPrototype.Repositories
         List<Test> GetAllTests();
         Test GetTestById(int id);
         void UpdateTest(Test test);
+        List<Topic> GetAllTopics();
+        int GetRandomTestByTopic(string topic);
+
     }
 }

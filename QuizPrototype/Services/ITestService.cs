@@ -1,4 +1,5 @@
 ﻿using QuizPrototype.Data.Models;
+using System.Collections.Generic;
 
 namespace QuizPrototype.Services
 {
@@ -8,5 +9,6 @@ namespace QuizPrototype.Services
         void TakeTest();
         void UpdateTest(int id, Test newTest);
         // void DeleteTest(int id);    
+        
     }
 }

@@ -7,11 +7,11 @@ namespace QuizPrototype.Data.Models
     {
         public int Id { get; set; }
         public string UserName { get; set; }
-        public string TestName { get; set; }
+        public int TestId { get; set; }
 
-        public List<Answer> RightAnswers { get; set; }
-        public List<Answer> WrongAnswers { get; set; }
+       public List<Answer> RightAnswers { get; set; }
+        public List<Answer> WrongAnswers { get; set;}
 
-        
+
     }
 }

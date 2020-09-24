@@ -10,5 +10,7 @@ namespace QuizPrototype.Data.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public UserTest UserTest { get; set; }
+
     }
 }

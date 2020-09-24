@@ -14,11 +14,11 @@ namespace QuizPrototype.Data.Models
         public string Title { get; set; }
         public string Description { get; set; }
 
-   //     public Theme Theme { get; set; }
-        public string SubTheme { get; set; }
-        public string SubSubTheme { get; set; }
+        //     public Theme Theme { get; set; }
+        public Topic Topic { get; set; }
         public List<Question> Questions { get; set; }
         public TimeSpan Time { get; set; }
+        public  int TopicId { get; set; }
 
 
 
@@ -32,13 +32,27 @@ namespace QuizPrototype.Data.Models
 
             Console.WriteLine("Enter a title");
             test.Title = Console.ReadLine();
-            Console.WriteLine("Enter a Subtheme");
-            test.SubTheme = Console.ReadLine();
+          
             Console.WriteLine("Enter a description");
             test.Description = Console.ReadLine();
-            Console.WriteLine("Enter a sub sub theme");
-            test.SubSubTheme = Console.ReadLine();
+
+            Console.WriteLine("Please,enter a topic of this test");
+            string topic = Console.ReadLine();
+            Console.WriteLine("Please, enter a subTopic of this test");
+            string subTopic = Console.ReadLine();
+            Console.WriteLine("Please, enter a sub-subTopic, otherwise enter '-' or '0'");
+            string sub_subTopic = Console.ReadLine();
             string isTimerExist;
+            test.Topic = new Topic()
+            {
+              Body = topic, 
+              SubTopic = new List<Topic>() 
+                  { new Topic() 
+                     {
+                       Body = subTopic, 
+                       SubTopic = new List<Topic>() 
+                  { new Topic() {
+                       Body = sub_subTopic } } } } };
 
             Console.WriteLine("Do you want to have a timer in your test? y/n");
             do
@@ -150,17 +164,15 @@ namespace QuizPrototype.Data.Models
             string newTitle = Console.ReadLine();
             updatedtest.Title = newTitle;
 
-            Console.WriteLine("Please, enter a new sub-theme");
-            string newSubTheme = Console.ReadLine();
-            updatedtest.SubTheme = newSubTheme;
+            
+
+
 
             Console.WriteLine("Please, enter a new description");
             string newDescription = Console.ReadLine();
             updatedtest.Description = newDescription;
 
-            Console.WriteLine("Please, enter a new Sub-subtheme");
-            string newSubSubTheme = Console.ReadLine();
-            updatedtest.SubSubTheme = newSubSubTheme;
+           
 
             string isTimerExist;
             Console.WriteLine("Do you want to update a timer in your test? y/n");
