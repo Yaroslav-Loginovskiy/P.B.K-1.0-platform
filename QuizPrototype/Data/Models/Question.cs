@@ -2,15 +2,17 @@
 {
     public class Question
     {
-        public string question { get; set; }
-        //public string thirdQuestion { get; set; }
-        //public string fourthQuestion { get; set; }
-        //public string fifthQuestion { get; set; }
-        //public string firstAnswer { get; set; }
-        //public string secondAnswer { get; set; }
-        //public string thirdAnswer { get; set; }
-        //public string fourthAnswer { get; set; }
-        //public string fifthAnswer { get; set; }
+        public int Id { get; set; }
+        public string Body { get; set; }
+        public Answer Answer { get; set; }
+        public int TestId { get; set; }
+
+
+        enum Type
+        {
+            Open,
+            Closed
+        }
 
     }
 }

@@ -1,11 +1,15 @@
-﻿namespace QuizPrototype.Services
+﻿using System;
+
+namespace QuizPrototype.Services
 {
     public class CheckTestService
     {
-        public bool CheckTest(string userAnswer, string answer)
+
+        public bool CheckAnswer(string userAnswer, string rightAnswer)
         {
             bool result;
-            if (userAnswer.ToLower() == answer.ToLower())
+      
+            if (userAnswer.ToLowerInvariant() == rightAnswer.ToLowerInvariant())
             {
                 result = true;
             }
@@ -15,5 +19,8 @@
             }
             return result;
         }
+
+        public Func<int, int, bool> CheckTest = (positive, negative) => positive > negative ? true : false;
+       
     }
 }

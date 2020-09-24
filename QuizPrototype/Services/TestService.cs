@@ -1,186 +1,153 @@
-﻿using QuizPrototype.Data.Models;
+﻿using QuizPrototype.Data;
+using QuizPrototype.Data.Models;
 using QuizPrototype.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Permissions;
-using System.Threading;
+using System.Timers;
 
 namespace QuizPrototype.Services
 {
-   public class TestService : ITestService
+    public class TestService
     {
-        readonly TestRepository testRepository = new TestRepository();
+
         readonly CheckTestService checkService = new CheckTestService();
-       
-        public void AddTest()
+        IUserRepository _userRepository = new UserRepository();
+        // _userRepository.Tests.AddNewTest();
+        System.Timers.Timer timer;
+        Test _test;
+        
+        UserTest userTest;
+        bool testFinished;
+        TimeSpan currentTestTime = default;
+        //_repository.AddTest() 
+
+        public TestService(Test test)
         {
-            Test test = new Test();
-            test.Questions = new List<Question>();
-            test.Answers = new List<Answer>();
-            Console.WriteLine("*** Creating Test ***");
-            test.Id = 4;
-            Console.WriteLine("Enter a title");
-            test.Title = Console.ReadLine();
-            Console.WriteLine("Enter a Subtheme");
-            test.SubTheme = Console.ReadLine();
-            Console.WriteLine("Enter a description");
-            test.Description = Console.ReadLine();
-            Console.WriteLine("Enter a sub sub theme");
-            test.SubSubTheme = Console.ReadLine();
-            bool userAnsw = true;
-            do
-            {
-                Console.WriteLine("Please add a question in your test...");
-                test.Questions.Add(new Question { question = Console.ReadLine() });
+            _test = test;
+          //  _user = user;
+            timer = new System.Timers.Timer(1000);
+            timer.Elapsed += Timer_Elapsed;
+            userTest = new UserTest();
+            
+        }
 
-                Console.WriteLine("Please, add a answer to the question below...");
-                test.Answers.Add(new Answer { answer = Console.ReadLine() });
-                Console.WriteLine("Do you want to create one more question? y/n");
-                do
-                   {
-                    var userEnter = Console.ReadLine();
-                    if (userEnter.ToLower() == "y")
-                    {
-                        userAnsw = true;
-                        break;
-                    }
-                    else
-                    {
-                        if (userEnter.ToLower() == "n")
-                        {
-                            Console.WriteLine("***Congratulations! You have created your Test!***");
-                            userAnsw = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Please,enter 'y' or 'n' to continue...");
-                            userAnsw = true;
-                        }
 
-                    }
-              } while (userAnsw == true);
-           } while (userAnsw == true);
-            testRepository.AddTest(test);
-            //Console.WriteLine($"Title of your Test : {test.title}\n Description of your test: {test.description}\n Sub-theme of your test: {test.subTheme}\n sub-sub theme of your test: {test.subSubTheme}" +
-            //    $"  ");
-            foreach (var answer in test.Answers)
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            currentTestTime += new TimeSpan(0, 0, 1);
+
+            if (_test.Time == currentTestTime)
             {
-               Console.WriteLine(answer.answer);
+                Console.WriteLine("Your test is finished");
+                testFinished = true;
             }
         }
 
-       
-        public void TakeTest()
+        //Stopwatch - total time
+        //System.Timers.Timer - with events
+
+        public bool TakeTest(bool resultsAreVisible = false)
         {
-            List<Test> allTests = testRepository.GetAllTests();
-            int count = 0;
-            foreach (var test in allTests)
+            User _user = _userRepository.GetUserById(1);
+            userTest.RightAnswers = new List<Answer>();
+            userTest.WrongAnswers = new List<Answer>();
+            Console.WriteLine($"You selected test about {_test.Title}, topic of this test is: {_test.Topic.Body}\n ");
+            if (_test.Time.Hours != 0 || _test.Time.Minutes != 0 || _test.Time.Seconds != 0)
             {
-                count++;
-                Console.WriteLine($"{count}) Test title : {test.Title}\n Test description: {test.Description} \n Test sub-theme: {test.SubTheme} \n");
+                Console.WriteLine("This test include timer");
+                Console.WriteLine($" You have {_test.Time.Hours} hours , {_test.Time.Minutes} minutes , {_test.Time.Seconds} seconds to pass this test.");
             }
-
-            Console.WriteLine("Choose the number of test u want to take...");
-
-            // Check input here!
-            int userEnter = int.Parse(Console.ReadLine());
-            // !!!
-
-            // decrement user enter, because of list starts with 0 index.
-            userEnter--;
-            var selectedTest = allTests.Where(x => x.Id == userEnter).FirstOrDefault();
-            //TakeTestWithTimer(selectedTest);
-            Thread thread = new Thread(new ParameterizedThreadStart(TakeTestWithTimer));
-            thread.Start(selectedTest);
-            Thread thread2 = new Thread(new ParameterizedThreadStart(TimerService.StartTimer));
-            thread2.Start(selectedTest.Timer);
+            else
+            {
+                Console.WriteLine("This test doesn't include timer");
+            }
+            Console.WriteLine("Do you want to see results after every question? y/n");
+            string userAnsw;
             do
             {
-                if (!thread.IsAlive)
+
+                userAnsw = Console.ReadLine();
+                if (userAnsw == "y")
                 {
-                    selectedTest.Timer = 0;
-                    thread2.Start(selectedTest);
+                    resultsAreVisible = true;
                 }
                 else
                 {
-                    if (!thread2.IsAlive)
+                    if (userAnsw == "n")
                     {
-                        selectedTest.accept = false;
-                        
-                        thread.Start(selectedTest);
-
-                    }
-                }
-
-            } while (thread.IsAlive || thread2.IsAlive);
-            Console.WriteLine("You did it.");
-
-            //TakeTestWithTimer(selectedTest);
-            //  TimerService.StartTimer(selectedTest.Timer);
-            //bool isCompleted = TakeTestWithTimer(selectedTest);
-            //do
-            //{
-            //    if (isCompleted ==true)
-            //    {
-            //        TimerService.StartTimer(0);
-            //    }
-            //} while (true);
-
-
-
-            //bool  running_ = false;
-            // thread.Interrupt();
-            //  if (!thread.Join(2000))
-            //  { // or an agreed resonable time
-            //     thread.Abort();
-            //  }
-
-
-
-           
-           
-
-        }
-
-        public void UpdateTest(int id, Test newTest)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TakeTestWithTimer(Object obj)
-        {
-            var selectedTest = (Test)obj;
-            
-            if (selectedTest.accept)
-            {
-                Console.WriteLine($"You selected test about {selectedTest.Title}, sub-theme of this test is: {selectedTest.SubTheme}\n ");
-                List<Question> questions = selectedTest.Questions.ToList();
-                List<Answer> answers = selectedTest.Answers.ToList();
-                bool result;
-                for (int i = 0; i < questions.Count; i++)
-                {
-                    var question = questions.ElementAt(i);
-                    var answer = answers.ElementAt(i);
-                    Console.WriteLine($"Question is :{question.question}\n");
-                    Console.WriteLine("Please, write the answer...");
-                    var userAnswer = Console.ReadLine();
-                    result = checkService.CheckTest(userAnswer, answer.answer);
-                    if (result == true)
-                    {
-                        Console.WriteLine($"You're right, answer is:{answer.answer}");
+                        resultsAreVisible = false;
                     }
                     else
                     {
-                        Console.WriteLine($"Wrong answer, the right answer is: {answer.answer}");
+                        Console.WriteLine("Uncorrect enter");
                     }
                 }
-            }
-            
-  
-            
+            } while (userAnsw != "n" & userAnsw != "y");
+            currentTestTime = default;
+            timer.Start();
+            int positive = default;
+            int negative = default;
+            int remainingQuestionsCount = _test.Questions.Count;
+            int i = 0;
 
+            while (remainingQuestionsCount == 0 || i != remainingQuestionsCount)
+
+            {
+                //CHECK
+                var question = _test.Questions.ElementAt(i);
+                //  var question = _test.Questions.Where(x => x.Id == i).FirstOrDefault();
+
+
+
+
+
+                i++;
+
+                Console.WriteLine($"Question is :{question.Body}\n");
+                Console.WriteLine("Please, write the answer...");
+
+                var userAnswer = Console.ReadLine();
+
+                if (testFinished == true)
+                {
+                    Console.WriteLine("Sorry you can't submit questions");
+                    testFinished = false;
+                    return checkService.CheckTest(positive, negative);
+
+                }
+
+                bool isCorrectAnswer = checkService.CheckAnswer(userAnswer, question.Answer.Body );
+
+                if (isCorrectAnswer)
+                {
+                    if (resultsAreVisible) Console.WriteLine($"You're right, answer is:{question.Answer.Body}");
+                    userTest.RightAnswers.Add(new Answer() {Body = question.Answer.Body, questionId=0 });
+                    positive++;
+                    
+                }
+                else
+                {
+                    if (resultsAreVisible) Console.WriteLine($"Wrong answer, the right answer is: {question.Answer.Body}");
+                    userTest.WrongAnswers.Add(new Answer() { Body = question.Answer.Body,questionId = 0 });
+                    negative++;
+                }
+            }
+            timer.Stop();
+            
+            userTest.TestId = _test.Id;
+            userTest.UserName = _user.Name;
+            
+            _userRepository.AddNewTestToUser(userTest, _user);
+            return checkService.CheckTest(positive, negative);
         }
+
+        /* 
+         * public bool TakeTest(int testId, )
+         * 
+         * 
+         */
     }
+
+
 }
