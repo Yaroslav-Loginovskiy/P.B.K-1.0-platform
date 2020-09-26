@@ -1,9 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.DotNet.PlatformAbstractions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QuizPrototype.Data.Models;
-using System;
-using System.IO;
 using System.Reflection;
 
 namespace QuizPrototype.Data
@@ -14,7 +10,7 @@ namespace QuizPrototype.Data
         public DbSet<Question> Question { get; set; }
         public DbSet<Answer> Answer { get; set; }
 
-      public DbSet<UserTest> UserTest { get; set; }
+        public DbSet<UserTest> UserTest { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Topic> Topic { get; set; }
 
@@ -26,10 +22,5 @@ namespace QuizPrototype.Data
             });
             base.OnConfiguring(optionsBuilder);
         }
-
-
-
-
-
     }
 }

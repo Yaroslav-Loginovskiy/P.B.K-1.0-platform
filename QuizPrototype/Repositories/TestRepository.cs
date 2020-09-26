@@ -2,7 +2,6 @@
 using QuizPrototype.Data;
 using QuizPrototype.Data.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,14 +21,14 @@ namespace QuizPrototype.Repositories
         {
             using (var dbContext = new DataBaseContext())
             {
-                
-                return dbContext.Tests.Include(c =>c.Questions).ThenInclude(g => g.Answer).Include(a =>a.Topic).ToList();
+
+                return dbContext.Tests.Include(c => c.Questions).ThenInclude(g => g.Answer).ToList();
             }
         }
 
         public void AddTest(Test newTest)
         {
-           using (var dbContext = new DataBaseContext())
+            using (var dbContext = new DataBaseContext())
             {
                 dbContext.Database.EnsureCreated();
                 dbContext.Tests.Add(newTest);
@@ -40,44 +39,25 @@ namespace QuizPrototype.Repositories
         {
 
             return context.Tests.Where(y => y.Id == testId).Include(o => o.Questions).ThenInclude(x => x.Answer).FirstOrDefault();
-            //var test = context.Tests.Where(x => x.Id == testId).FirstOrDefault();
-            //var quest = context.Question.Where(x => x.TestId == testId).FirstOrDefault();
-            //List<Question> questions = new List<Question>();
-            //var qquestions = context.Question.Where(x => x.TestId == testId).ToList();
-            //questions.AddRange(qquestions);
-            //List<Answer> answers = new List<Answer>();
 
-            //var answ = context.Answer.Where(x => x.questionId == quest.Id).FirstOrDefault();
-            //// quest
-
-            
-            //return context.Tests.Where(x => x.Id == testId)
-            //.Include(c => c.Questions)
-
-            //.FirstOrDefault();
         }
-            
-         public List<Topic> GetAllTopics()
+
+        public List<Topic> GetAllTopics()
         {
             return context.Topic.ToList();
         }
-        
+
         public void UpdateTest(Test updatedTest)
         {
 
             Test updatedtest = updatedTest;
             using (var dbContext = new DataBaseContext())
             {
-               // context.Tests.Attach(updatedtest);
-              //   context.Entry(updatedtest).State = EntityState.Modified;
-                context.SaveChanges();
+                dbContext.Tests.Attach(updatedtest);
+                dbContext.Entry(updatedtest).State = EntityState.Modified;
+                dbContext.SaveChanges();
             }
-            //using (var dbContext = new DataBaseContext())
-            //{
-            //   dbContext.Tests.Attach(updatedtest);
-            //   dbContext.Entry(updatedtest).State = EntityState.Modified;
-            //   dbContext.SaveChanges();
-            //}
+           
         }
         public void DeleteQuestionsById(int questionId, int updatedTestId)
         {
@@ -107,7 +87,7 @@ namespace QuizPrototype.Repositories
             {
                 foreach (var item in context.Answer)
                 {
-                    if (item.questionId == questId )
+                    if (item.questionId == questId)
                     {
                         deletedItemsAnsw.Add(item);
                     }
@@ -115,26 +95,27 @@ namespace QuizPrototype.Repositories
             }
             context.Answer.RemoveRange(deletedItemsAnsw);
             context.SaveChanges();
-            
+
         }
 
-        public int GetRandomTestByTopic(string topic)
+        public List<Test> GetTestByTopic(string topic)
         {
-            List<Test> allTests = context.Tests.ToList();
-            List<Topic> allTopics = context.Topic.ToList();
-           
-            Random random = new Random();
-           int id =  random.Next(allTests.Count);
-            Test test = allTests[id];
+            return context.Tests.Where(x => x.Topic == topic).Include(c => c.Questions).ThenInclude(a => a.Answer).ToList();
+        }
 
 
-
-
-
-
-
-
-            return test.Id; 
+        public Test GetRandomTestByTopic(string topic)
+        {
+           List<Test> testsWithSpecTopic = context.Tests.Where(x => x.Topic == topic).Include(c => c.Questions).ThenInclude(a => a.Answer).ToList();
+           Random random = new Random();
+           int randomId = random.Next(testsWithSpecTopic.Count);
+           Test test = testsWithSpecTopic[randomId];
+           return test;
+        }
+        public void AddNewQuestion(Question question)
+        {
+            context.Question.Add(question);
+            context.SaveChanges();
         }
     }
 }

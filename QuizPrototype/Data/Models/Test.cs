@@ -1,8 +1,8 @@
 ﻿using QuizPrototype.Repositories;
-using QuizPrototype.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace QuizPrototype.Data.Models
 {
@@ -14,13 +14,16 @@ namespace QuizPrototype.Data.Models
         public string Title { get; set; }
         public string Description { get; set; }
 
-        //     public Theme Theme { get; set; }
-        public Topic Topic { get; set; }
+
+
+        public string Topic { get; set; }
+
         public List<Question> Questions { get; set; }
         public TimeSpan Time { get; set; }
-        public  int TopicId { get; set; }
 
+        public int RightQuestionsCount { get; set; }
 
+        public int WrongQiestionsCount { get; set; }
 
         public static Test CreateTest()
         {
@@ -32,28 +35,32 @@ namespace QuizPrototype.Data.Models
 
             Console.WriteLine("Enter a title");
             test.Title = Console.ReadLine();
-          
+
             Console.WriteLine("Enter a description");
             test.Description = Console.ReadLine();
 
-            Console.WriteLine("Please,enter a topic of this test");
-            string topic = Console.ReadLine();
-            Console.WriteLine("Please, enter a subTopic of this test");
-            string subTopic = Console.ReadLine();
-            Console.WriteLine("Please, enter a sub-subTopic, otherwise enter '-' or '0'");
-            string sub_subTopic = Console.ReadLine();
-            string isTimerExist;
-            test.Topic = new Topic()
+            Console.WriteLine("There is a topics you can choose...\n");
+            Topic topic = null;
+            do
             {
-              Body = topic, 
-              SubTopic = new List<Topic>() 
-                  { new Topic() 
-                     {
-                       Body = subTopic, 
-                       SubTopic = new List<Topic>() 
-                  { new Topic() {
-                       Body = sub_subTopic } } } } };
 
+
+                TreeStructureTopics treeStructure = new TreeStructureTopics();
+                treeStructure.GetTreeTopic();
+                Console.WriteLine("Choose the one of them and write name of topic below...");
+
+                string topicName = Console.ReadLine();
+                var existingTopic = treeStructure.GetTopicName(topicName);
+                if (existingTopic == null)
+                {
+                    Console.WriteLine("!Please, write the name one of topics given below!\n" +
+                        $"----Uncurrect topic '{topicName}'");
+                }
+                topic = existingTopic;
+            } while (topic == null);
+
+            test.Topic = topic.Name;
+            string isTimerExist;
             Console.WriteLine("Do you want to have a timer in your test? y/n");
             do
             {
@@ -106,7 +113,7 @@ namespace QuizPrototype.Data.Models
                     }
                 }
             } while (isTimerExist != "y" & isTimerExist != "no");
-    
+
             bool userAnsw = true;
             do
             {
@@ -117,7 +124,7 @@ namespace QuizPrototype.Data.Models
                 Console.WriteLine("Please, add a answer to the question below...");
 
                 string answerToUserQuestion = Console.ReadLine();
-                test.Questions.Add(new Question
+                test.Questions.Add(new Question()
                 {
                     Body = userQuestion,
                     Answer = new Answer { Body = answerToUserQuestion }
@@ -136,7 +143,7 @@ namespace QuizPrototype.Data.Models
                     {
                         if (userEnter.ToLower() == "n")
                         {
-                            
+
                             userAnsw = false;
                         }
                         else
@@ -151,20 +158,20 @@ namespace QuizPrototype.Data.Models
 
             return test;
         }
-    
-        
+
+
         public static Test UpdateTest(int testId)
         {
             TestRepository testRepository = new TestRepository();
             Test updatedtest = testRepository.GetTestById(testId);
-           
+
             Console.WriteLine("***Test updating***\n");
 
             Console.WriteLine("Please, enter a new title");
             string newTitle = Console.ReadLine();
             updatedtest.Title = newTitle;
 
-            
+
 
 
 
@@ -172,8 +179,27 @@ namespace QuizPrototype.Data.Models
             string newDescription = Console.ReadLine();
             updatedtest.Description = newDescription;
 
-           
+            Console.WriteLine("There are available topics, that you can choose.\n");
+            TreeStructureTopics treeStructureTopics = new TreeStructureTopics();
 
+            Topic topic = null;
+
+            do
+            {
+                treeStructureTopics.GetTreeTopic();
+                Console.WriteLine("*Choose a new topic/sub-topic/ sub-subTopic of this test and write it below this text*\n");
+                string topicName = Console.ReadLine();
+
+                var existingTopic = treeStructureTopics.GetTopicName(topicName);
+                if (existingTopic == null)
+                {
+                    Console.WriteLine("!Please, write the name one of topics given below!\n" +
+                    $"----Uncurrect topic '{topicName}'");
+                }
+                topic = existingTopic;
+            } while (topic == null);
+
+            updatedtest.Topic = topic.Name;
             string isTimerExist;
             Console.WriteLine("Do you want to update a timer in your test? y/n");
             do
@@ -293,14 +319,14 @@ namespace QuizPrototype.Data.Models
                                 Console.WriteLine($"{questions.Id})-{questions.Body}");
                             }
 
-                           do
+                            do
                             {
 
                                 Console.WriteLine("Enter the id of question you want to delete");
                                 isParsed = int.TryParse(Console.ReadLine(), out int questionId);
                                 if (isParsed)
                                 {
-                                   deletedItemQuestion = updatedtest.Questions.Where(x => x.Id == questionId).FirstOrDefault();
+                                    deletedItemQuestion = updatedtest.Questions.Where(x => x.Id == questionId).FirstOrDefault();
                                     if (deletedItemQuestion == null)
                                     {
                                         Console.WriteLine("This id is not correct");
@@ -309,13 +335,6 @@ namespace QuizPrototype.Data.Models
                                     else
                                     {
                                         testRepository.DeleteQuestionsById(questionId, updatedtest.Id);
-                                        /* if(item deleted)
-                                         * {
-                                         *   Console.WriteLine("succesfully");
-                                         * }
-                                         * else{ Console.WriteLine("Item isn't exists")}
-                                         * 
-                                         */
                                         Console.WriteLine("Item succesufully deleted");
                                         isExistingQuestion = true;
                                     }
@@ -335,14 +354,12 @@ namespace QuizPrototype.Data.Models
                                 if (userContinue.ToLower() == "n")
                                 {
                                     Console.WriteLine("Exit from updating questons...");
-
                                 }
                                 else
                                 {
                                     if (userContinue.ToLower() == "y")
                                     {
                                         Console.WriteLine("Continue...");
-
                                     }
                                     else
                                     {
@@ -357,7 +374,6 @@ namespace QuizPrototype.Data.Models
                                 break;
                             }
                         } while (userContinue.ToLower() != "n");
-
                         break;
                     case "2":
                         testRepository.DeleteAllQuestionsAndAnswers(updatedtest.Id);
@@ -369,10 +385,7 @@ namespace QuizPrototype.Data.Models
                         {
                             Console.WriteLine("Please add a question in your test...");
                             string userQuestion = Console.ReadLine();
-
-
                             Console.WriteLine("Please, add a answer to the question below...");
-
                             string answerToUserQuestion = Console.ReadLine();
                             updatedtest.Questions.Add(new Question
                             {
@@ -427,14 +440,13 @@ namespace QuizPrototype.Data.Models
                         {
                             Console.WriteLine("Continue updating questions...");
                             exitFromQuestionChanges = true;
-
                         }
                         else { Console.WriteLine("Please, enter y or n to continue..."); }
                     }
                 } while (userDesision.ToLower() != "n" && userDesision.ToLower() != "y");
             } while (exitFromQuestionChanges != false);
 
-           return updatedtest;
+            return updatedtest;
         }
     }
 }

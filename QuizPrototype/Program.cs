@@ -1,5 +1,4 @@
-﻿using QuizPrototype.Data;
-using QuizPrototype.Data.Models;
+﻿using QuizPrototype.Data.Models;
 using QuizPrototype.Repositories;
 using QuizPrototype.Services;
 using QuizPrototype.UI;
@@ -14,14 +13,6 @@ namespace QuizPrototype
 
             ITestRepository testRepository = new TestRepository();
             UserPrompts userPrompts = new UserPrompts(testRepository);
-            //DataBaseContext dataBaseContext = new DataBaseContext();
-            //User user = new User();
-            //user.Name = "guest";
-            
-            
-            //dataBaseContext.User.Add(user);
-            //dataBaseContext.SaveChanges();
-            //TestService testService = new TestService();
             Console.WriteLine("***Welcome to PBK 1.0 test platform!***\n");
             Console.WriteLine(@"In this application you can:
 
@@ -72,8 +63,9 @@ namespace QuizPrototype
                 {
                     case 1:
 
-                        int testIdD = userPrompts.PromptForTargetRandomTestId();
-                        var test = testRepository.GetTestById(testIdD);
+                        string testTopic = userPrompts.PromptForTargetRandomTestId();
+                        var test = testRepository.GetRandomTestByTopic(testTopic);
+
                         TestService service = new TestService(test);
                         service.TakeTest();
                         break;
@@ -90,8 +82,8 @@ namespace QuizPrototype
 
                         break;
                     case 4:
-                        Console.WriteLine("Showing statistics...");
-                        Console.ReadLine();
+                        userPrompts.PromptForShowStatistics();
+
                         break;
 
                 }
@@ -115,7 +107,5 @@ namespace QuizPrototype
             } while (userAnsw != false);
 
         }
-
-
     }
 }

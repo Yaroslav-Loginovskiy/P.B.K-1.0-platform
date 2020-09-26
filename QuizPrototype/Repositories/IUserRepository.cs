@@ -1,14 +1,16 @@
 ﻿using QuizPrototype.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace QuizPrototype.Repositories
 {
     interface IUserRepository
     {
-        void AddNewTestToUser(UserTest userTest, User user);
+        void AddNewTestToUser(User user);
         void AddNewUser(User user);
         User GetUserById(int id);
+        public void SaveNewUserTest(UserTest userTest);
+        List<UserTest> GetAllUserTests();
+        List<UserTest> GetUserTestByTestTopic(string testTopic);
+        List<Test> GetTestsByUserTestId(string userTopic);
     }
 }

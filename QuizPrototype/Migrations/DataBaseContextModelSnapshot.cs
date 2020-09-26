@@ -25,20 +25,10 @@ namespace QuizPrototype.Migrations
                     b.Property<string>("Body")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserTestId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("UserTestId1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("questionId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserTestId");
-
-                    b.HasIndex("UserTestId1");
 
                     b.HasIndex("questionId")
                         .IsUnique();
@@ -74,18 +64,22 @@ namespace QuizPrototype.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("RightQuestionsCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TopicId")
+                    b.Property<string>("Topic")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WrongQiestionsCount")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TopicId");
 
                     b.ToTable("Tests");
                 });
@@ -96,15 +90,10 @@ namespace QuizPrototype.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Body")
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("TopicId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TopicId");
 
                     b.ToTable("Topic");
                 });
@@ -129,8 +118,8 @@ namespace QuizPrototype.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TestName")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TestId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
                         .HasColumnType("TEXT");
@@ -142,14 +131,6 @@ namespace QuizPrototype.Migrations
 
             modelBuilder.Entity("QuizPrototype.Data.Models.Answer", b =>
                 {
-                    b.HasOne("QuizPrototype.Data.Models.UserTest", null)
-                        .WithMany("RightAnswers")
-                        .HasForeignKey("UserTestId");
-
-                    b.HasOne("QuizPrototype.Data.Models.UserTest", null)
-                        .WithMany("WrongAnswers")
-                        .HasForeignKey("UserTestId1");
-
                     b.HasOne("QuizPrototype.Data.Models.Question", null)
                         .WithOne("Answer")
                         .HasForeignKey("QuizPrototype.Data.Models.Answer", "questionId")
@@ -164,20 +145,6 @@ namespace QuizPrototype.Migrations
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("QuizPrototype.Data.Models.Test", b =>
-                {
-                    b.HasOne("QuizPrototype.Data.Models.Topic", "Topic")
-                        .WithMany()
-                        .HasForeignKey("TopicId");
-                });
-
-            modelBuilder.Entity("QuizPrototype.Data.Models.Topic", b =>
-                {
-                    b.HasOne("QuizPrototype.Data.Models.Topic", null)
-                        .WithMany("SubTopic")
-                        .HasForeignKey("TopicId");
                 });
 #pragma warning restore 612, 618
         }

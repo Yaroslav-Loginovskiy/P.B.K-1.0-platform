@@ -1,8 +1,6 @@
-﻿using QuizPrototype.Data;
-using QuizPrototype.Data.Models;
+﻿using QuizPrototype.Data.Models;
 using QuizPrototype.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
@@ -13,23 +11,16 @@ namespace QuizPrototype.Services
 
         readonly CheckTestService checkService = new CheckTestService();
         IUserRepository _userRepository = new UserRepository();
-        // _userRepository.Tests.AddNewTest();
         System.Timers.Timer timer;
         Test _test;
-        
-        UserTest userTest;
         bool testFinished;
         TimeSpan currentTestTime = default;
-        //_repository.AddTest() 
 
         public TestService(Test test)
         {
             _test = test;
-          //  _user = user;
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
-            userTest = new UserTest();
-            
         }
 
 
@@ -50,9 +41,13 @@ namespace QuizPrototype.Services
         public bool TakeTest(bool resultsAreVisible = false)
         {
             User _user = _userRepository.GetUserById(1);
-            userTest.RightAnswers = new List<Answer>();
-            userTest.WrongAnswers = new List<Answer>();
-            Console.WriteLine($"You selected test about {_test.Title}, topic of this test is: {_test.Topic.Body}\n ");
+            UserTest userTest = new UserTest();
+            userTest.UserName = _user.Name;
+            userTest.TestId = _test.Id;
+
+
+
+            Console.WriteLine($"You selected test about {_test.Title}, topic of this test is: {_test.Topic}\n ");
             if (_test.Time.Hours != 0 || _test.Time.Minutes != 0 || _test.Time.Seconds != 0)
             {
                 Console.WriteLine("This test include timer");
@@ -94,21 +89,12 @@ namespace QuizPrototype.Services
             while (remainingQuestionsCount == 0 || i != remainingQuestionsCount)
 
             {
-                //CHECK
+
                 var question = _test.Questions.ElementAt(i);
-                //  var question = _test.Questions.Where(x => x.Id == i).FirstOrDefault();
-
-
-
-
-
                 i++;
-
                 Console.WriteLine($"Question is :{question.Body}\n");
                 Console.WriteLine("Please, write the answer...");
-
                 var userAnswer = Console.ReadLine();
-
                 if (testFinished == true)
                 {
                     Console.WriteLine("Sorry you can't submit questions");
@@ -117,37 +103,32 @@ namespace QuizPrototype.Services
 
                 }
 
-                bool isCorrectAnswer = checkService.CheckAnswer(userAnswer, question.Answer.Body );
+                bool isCorrectAnswer = checkService.CheckAnswer(userAnswer, question.Answer.Body);
 
                 if (isCorrectAnswer)
                 {
                     if (resultsAreVisible) Console.WriteLine($"You're right, answer is:{question.Answer.Body}");
-                    userTest.RightAnswers.Add(new Answer() {Body = question.Answer.Body, questionId=0 });
                     positive++;
-                    
                 }
                 else
                 {
                     if (resultsAreVisible) Console.WriteLine($"Wrong answer, the right answer is: {question.Answer.Body}");
-                    userTest.WrongAnswers.Add(new Answer() { Body = question.Answer.Body,questionId = 0 });
                     negative++;
                 }
             }
             timer.Stop();
-            
-            userTest.TestId = _test.Id;
-            userTest.UserName = _user.Name;
-            
-            _userRepository.AddNewTestToUser(userTest, _user);
+            Console.WriteLine("*Test ended*");
+            Console.WriteLine($"Count of wrong questions: {negative}");
+            Console.WriteLine($"Count of right Answers:{positive}");
+
+            _test.RightQuestionsCount = positive;
+            _test.WrongQiestionsCount = negative;
+            TestRepository testRepository = new TestRepository();
+            testRepository.UpdateTest(_test);
+            _userRepository.SaveNewUserTest(userTest);
             return checkService.CheckTest(positive, negative);
+
         }
 
-        /* 
-         * public bool TakeTest(int testId, )
-         * 
-         * 
-         */
     }
-
-
 }
